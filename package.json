@@ -1,0 +1,32 @@
+{
+  "name": "fallback-status",
+  "version": "1.0.0",
+  "description": "Fallback action based on status",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js",
+    "test": "eslint index.js && jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TangleTheApp/fallback-status.git"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "JavaScript"
+  ],
+  "author": "GitHub",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TangleTheApp/alt-circle/issues"
+  },
+  "homepage": "https://github.com/TangleTheApp/alt-circle#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@octokit/core": "^3.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.7.0"
+  }
+}

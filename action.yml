@@ -1,0 +1,18 @@
+name: 'Fallback Status'
+description: 'Execute fallback strategy'
+inputs:
+  repo-token:
+    description: 'The GITHUB_TOKEN secret'
+    required: true
+  status-name:
+    description: 'Name of status to fallback for'
+    required: true
+  timeout:
+    description: 'Seconds to wait until fallback strategy is executed'
+    default: 30
+outputs:
+  should-fallback:
+    description: 'A boolean value indicating whether to execute fallback'
+runs:
+  using: 'node12'
+  main: 'index.js'
