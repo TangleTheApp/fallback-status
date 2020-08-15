@@ -31,18 +31,21 @@ async function run() {
       })
       core.info(response.status);
       core.info(response.data.state);
-      if (response.data.state == 'success') {
+      const matchingStatus = response.data.statuses.find((status) => {
+        return status.context == input.statusName
+      });
+      if (matchingStatus && matchingStatus.state == 'success') {
         core.setOutput('should-fallback', false)
         return;
       }
-      if (response.data.state == 'failure') {
+      if (matchingStatus && matchingStatus.state == 'failure') {
         core.setOutput('should-fallback', true)
         return;
       }
       await wait(3000);
     }
     core.error('Timed out waiting for response state to exit pending...')
-    core.setOutput('should-fallback', true)
+    core.setOutput('should-fallback', false)
   }
   catch (error) {
     core.setFailed(error.message);
