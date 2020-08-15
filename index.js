@@ -30,10 +30,13 @@ async function run() {
         ref: input.githubSha,
       })
       core.info(response.status);
-      core.info(response.data.state);
       const matchingStatus = response.data.statuses.find((status) => {
+        core.info(status.context);
+        core.info(status.description);
         return status.context == input.statusName
       });
+      core.info(matchingStatus);
+      core.info(matchingStatus.state);
       if (matchingStatus && matchingStatus.state == 'success') {
         core.setOutput('should-fallback', false)
         return;
