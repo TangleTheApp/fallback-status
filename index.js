@@ -24,25 +24,27 @@ async function run() {
     await wait(1000);
 
     while (getTimeElapsed(startTime) < input.timeout) {
-      response = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/status', {
+      response = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
         owner: input.githubOwner,
         repo: input.githubRepo,
         ref: input.githubSha,
+        mediaType: {
+          previews: [
+            'antiope'
+          ]
+        }
       })
       core.info(response.status);
       core.info(JSON.stringify(response.data));
-      const matchingStatus = response.data.statuses.find((status) => {
-        core.info(status.context);
-        core.info(status.description);
-        return status.context == input.statusName
+      const matchingStatus = response.data.check_runs.find((checks) => {
+        return checks.name == input.statusName
       });
-      core.info(matchingStatus);
-      core.info(matchingStatus.state);
-      if (matchingStatus && matchingStatus.state == 'success') {
+      core.info(JSON.stringify(matchingStatus));
+      if (matchingStatus && matchingStatus.status == 'success') {
         core.setOutput('should-fallback', false)
         return;
       }
-      if (matchingStatus && matchingStatus.state == 'failure') {
+      if (matchingStatus && matchingStatus.status == 'failure') {
         core.setOutput('should-fallback', true)
         return;
       }
