@@ -29,7 +29,8 @@ async function run() {
         repo: input.githubRepo,
         ref: input.githubSha,
       })
-      core.info(response);
+      core.info(response.status);
+      core.info(response.data.state);
       if (response.data.state == 'success') {
         core.setOutput('should-fallback', false)
         return;
