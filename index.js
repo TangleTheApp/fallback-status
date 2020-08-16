@@ -24,7 +24,7 @@ async function run() {
     await wait(1000);
 
     while (getTimeElapsed(startTime) < input.timeout) {
-      response = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/status', {
+      response = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/statuses', {
         owner: input.githubOwner,
         repo: input.githubRepo,
         ref: input.githubSha,
