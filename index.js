@@ -30,7 +30,7 @@ async function run() {
         ref: input.githubSha,
       })
       core.info(response.status)
-      core.info(JSON.stringify(response.data))
+      core.info(JSON.stringify(response))
       const matchingStatus = response.data.find((status) => {
         return status.context == input.statusName
       })
