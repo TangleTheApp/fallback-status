@@ -1,7 +1,7 @@
-const wait = require('./wait');
+const wait = require('./wait')
 
-const core = require('@actions/core');
-const { Octokit } = require("@octokit/core");
+const core = require('@actions/core')
+const { Octokit } = require("@octokit/core")
 
 async function run() {
   try {
@@ -13,48 +13,44 @@ async function run() {
       githubSha: process.env.GITHUB_SHA,
       githubOwner: repository[0],
       githubRepo: repository[1],
-    };
+    }
 
     const octokit = new Octokit({
       auth: input.token,
-    });
+    })
 
     const startTime = new Date()
 
-    await wait(1000);
+    await wait(1000)
 
     while (getTimeElapsed(startTime) < input.timeout) {
-      response = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
+      response = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/statuses', {
         owner: input.githubOwner,
         repo: input.githubRepo,
         ref: input.githubSha,
-        mediaType: {
-          previews: [
-            'antiope'
-          ]
-        }
       })
-      core.info(response.status);
-      core.info(JSON.stringify(response.data));
-      const matchingStatus = response.data.check_runs.find((checks) => {
-        return checks.name == input.statusName
-      });
-      core.info(JSON.stringify(matchingStatus));
-      if (matchingStatus && matchingStatus.status == 'success') {
+      core.info(response.status)
+      core.info(JSON.stringify(response.data))
+      const matchingStatus = response.data.find((status) => {
+        return status.context == input.statusName
+      })
+      core.info(JSON.stringify(matchingStatus))
+      const state = matchingStatus ? matchingStatus.state : ''
+      if (state == 'success') {
         core.setOutput('should-fallback', false)
-        return;
+        return
       }
-      if (matchingStatus && matchingStatus.status == 'failure') {
+      if (state == 'failure') {
         core.setOutput('should-fallback', true)
-        return;
+        return
       }
-      await wait(3000);
+      await wait(3000)
     }
     core.error('Timed out waiting for response state to exit pending...')
     core.setOutput('should-fallback', false)
   }
   catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(error.message)
   }
 }
 
